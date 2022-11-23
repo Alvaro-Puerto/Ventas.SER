@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ventas.SER.Context;
 
@@ -11,9 +12,11 @@ using Ventas.SER.Context;
 namespace Ventas.SER.Migrations
 {
     [DbContext(typeof(VentaContexto))]
-    partial class VentaContextoModelSnapshot : ModelSnapshot
+    [Migration("20221123005319_CampoUnicoIdentificacionCliente")]
+    partial class CampoUnicoIdentificacionCliente
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,31 +66,6 @@ namespace Ventas.SER.Migrations
                         .IsUnique();
 
                     b.ToTable("Clientes");
-                });
-
-            modelBuilder.Entity("Ventas.SER.Models.TasaCambio", b =>
-                {
-                    b.Property<int>("TasaCambioId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TasaCambioId"));
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaHoraCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<float>("Monto")
-                        .HasColumnType("real");
-
-                    b.HasKey("TasaCambioId");
-
-                    b.HasIndex("Fecha")
-                        .IsUnique();
-
-                    b.ToTable("TasaCambios");
                 });
 #pragma warning restore 612, 618
         }

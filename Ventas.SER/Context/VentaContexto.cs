@@ -7,6 +7,9 @@ namespace Ventas.SER.Context
     {
         public virtual DbSet<Cliente> Clientes { get; set; }
 
+        public virtual DbSet<TasaCambio> TasaCambios { get; set; }
+
+
         public VentaContexto(DbContextOptions<VentaContexto> opcional) : base(opcional)
         {
 
