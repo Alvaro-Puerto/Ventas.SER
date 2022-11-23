@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ventas.SER.Models
 {
+    [Index(nameof(Identificacion), IsUnique = true)]
     public class Cliente
     {
         [Key]
