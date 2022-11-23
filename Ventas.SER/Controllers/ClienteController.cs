@@ -55,7 +55,7 @@ namespace Ventas.SER.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Cliente cliente)
         {
-            Cliente clienteA = new Cliente();
+            var clienteA = new Cliente();
 
             clienteA = await _db.Clientes.FindAsync(id);
 
@@ -69,6 +69,7 @@ namespace Ventas.SER.Controllers
             clienteA.Telefono = cliente.Telefono;
             clienteA.Identificacion = cliente.Identificacion;
             clienteA.Direccion = cliente.Direccion;
+            
             _db.Clientes.Update(clienteA);
             _db.SaveChangesAsync();
 
