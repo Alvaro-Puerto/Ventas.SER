@@ -47,7 +47,38 @@ namespace Ventas.SER.Controllers
              
              ).ToList();
 
+
           
+            if (!String.IsNullOrEmpty(filtro.NombresCompletos))
+            {
+                reporte = reporte.Where(rpt => rpt.NombresCompletos.Contains(filtro.NombresCompletos)).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(filtro.Identificacion))
+            {
+                reporte = reporte.Where(rpt => rpt.NombresCompletos.Contains(filtro.Identificacion)).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(filtro.SKU))
+            {
+                reporte = reporte.Where(rpt => rpt.SKU.Contains(filtro.SKU)).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(filtro.Producto))
+            {
+                reporte = reporte.Where(rpt => rpt.Producto.Contains(filtro.Producto)).ToList();
+            }
+
+            if (filtro.Mes != 0)
+            {
+                reporte = reporte.Where(rpt => rpt.Mes.Equals(filtro.Mes)).ToList();
+            }
+
+            if (filtro.Anyo != 0)
+            {
+                reporte = reporte.Where(rpt => rpt.Equals(filtro.Anyo)).ToList();
+            }
+
             return Ok(reporte);
         }
 
