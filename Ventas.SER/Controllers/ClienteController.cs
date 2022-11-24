@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ventas.SER.Context;
+using Ventas.SER.DTOS;
 using Ventas.SER.Models;
 
 
@@ -12,44 +14,54 @@ namespace Ventas.SER.Controllers
     {
 
         private readonly VentaContexto _db;
-
-        public ClienteController(VentaContexto db) {
+        private readonly IMapper _mapper;
+        
+        public ClienteController(VentaContexto db, IMapper mapper) {
             _db = db;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Cliente>> Get()
+        public async Task<IActionResult> Get()
         {
-            List<Cliente> clientes = new List<Cliente>();
+            var clientes = new List<Cliente>();
 
             clientes = await _db.Clientes.ToListAsync();
 
-            return clientes;
+            return Ok(clientes);
         }
 
         [HttpGet("{id}")]
-        public async Task<Cliente> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            Cliente cliente = new Cliente();
+            var cliente = new Cliente();
 
             cliente = await _db.Clientes.FindAsync(id);
 
-            return cliente;
+            return Ok(cliente);
         }
 
      
         [HttpPost]
         public async Task<IActionResult> Post(Cliente cliente)
         {
+          
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.SelectMany(err => err.Value.Errors));
             } 
 
-            var result = _db.Clientes.AddAsync(cliente);
-            _db.SaveChangesAsync();
+            try
+            {
+                var result = await _db.Clientes.AddAsync(cliente);
+                _db.SaveChangesAsync();
 
-            return Ok();
+                return Ok(cliente);
+            } catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         [HttpPut("{id}")]
@@ -57,35 +69,43 @@ namespace Ventas.SER.Controllers
         {
             var clienteA = new Cliente();
 
-            clienteA = await _db.Clientes.FindAsync(id);
+            clienteA = await _db.Clientes.Where(c => c.ClienteId == id).AsNoTracking().FirstOrDefaultAsync();
 
             if(clienteA == null)
             {
                 return BadRequest();
             }
 
-            clienteA.Nombres = cliente.Nombres;
-            clienteA.Apellidos = cliente.Apellidos;
-            clienteA.Telefono = cliente.Telefono;
-            clienteA.Identificacion = cliente.Identificacion;
-            clienteA.Direccion = cliente.Direccion;
+            clienteA = _mapper.Map<Cliente>(cliente);
             
             _db.Clientes.Update(clienteA);
             _db.SaveChangesAsync();
 
-            return Ok(clienteA);
+            return Ok(cliente);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            Cliente cliente = new Cliente();
-            cliente = await _db.Clientes.FindAsync(id);
+            var cliente = new Cliente();
+            cliente = await _db.Clientes.Where(c => c.ClienteId == id).FirstOrDefaultAsync();
             _db.Clientes.Remove(cliente);
             _db.SaveChangesAsync();
 
             return Ok();
 
+        }
+
+        [HttpGet("~/buscar/{parametro}")]
+        public async Task<IActionResult> Get(string parametro)
+        {
+            var clientes = new List<Cliente>();
+
+            clientes = await _db.Clientes.Where(c => c.Nombres.Contains(parametro) ||
+                                                     c.Identificacion.Contains(parametro))
+                                                    .ToListAsync();
+
+            return Ok(clientes);
         }
     }
 }

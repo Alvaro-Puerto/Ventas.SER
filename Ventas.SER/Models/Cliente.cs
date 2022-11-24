@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Ventas.SER.Models
 {
@@ -33,7 +34,8 @@ namespace Ventas.SER.Models
 
         public DateTime FechaHoraCreacion { get; set;} = DateTime.Now;
 
-        public  ICollection<Factura> Facturas { get; set;}
+        [JsonIgnore]
+        public  ICollection<Factura>? Facturas { get; set;}
 
         public string NombresCompletos()
         {

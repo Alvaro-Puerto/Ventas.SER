@@ -79,9 +79,9 @@ namespace Ventas.SER.Controllers
             }
 
             var result = await _db.Productos.AddAsync(producto);
-            _ = _db.SaveChangesAsync();
+            _db.SaveChangesAsync();
 
-            return Ok(result);
+            return Ok(producto);
         }
 
       

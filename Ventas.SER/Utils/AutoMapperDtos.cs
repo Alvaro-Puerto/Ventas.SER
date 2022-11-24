@@ -12,6 +12,7 @@ namespace Ventas.SER.Utils
             CreateMap<TasaCambio, TasaCambioDto>().ReverseMap();
             CreateMap<FacturaInsertarDto, Factura>().ReverseMap();
             CreateMap<FacturaDetalle, DetalleFacturaInsertarDto>().ReverseMap();
+            CreateMap<Cliente, ClienteDto>().ReverseMap();
         }
     }
 }

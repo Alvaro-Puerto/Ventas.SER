@@ -85,7 +85,7 @@ namespace Ventas.SER.Controllers
         {
             var tasaCambio = new TasaCambio();
 
-            tasaCambio = await _db.TasaCambios.FindAsync(id);
+            tasaCambio = await _db.TasaCambios.Where(ts => ts.TasaCambioId ==id).FirstOrDefaultAsync();
 
             var result = _db.TasaCambios.Remove(tasaCambio);
             _db.SaveChangesAsync();
@@ -94,7 +94,7 @@ namespace Ventas.SER.Controllers
 
         }
 
-        [Route("~/api/TasaCambio/Mes/{month}")]
+        [Route("~api/TasaCambio/Mes/{month}")]
         [HttpGet()]
         public async Task<IActionResult> Month(int month)
         {

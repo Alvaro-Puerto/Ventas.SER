@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ventas.SER.Context;
 
@@ -11,9 +12,11 @@ using Ventas.SER.Context;
 namespace Ventas.SER.Migrations
 {
     [DbContext(typeof(VentaContexto))]
-    partial class VentaContextoModelSnapshot : ModelSnapshot
+    [Migration("20221124150127_ClienteCascadoMigration")]
+    partial class ClienteCascadoMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -100,7 +100,7 @@ namespace Ventas.SER.Controllers
             
             detalles.ForEach( dt => dt.RecalcularCosto( _db.Productos.Find(dt.ProductoId)));
 
-            factura.Fecha = factura.Fecha;
+            factura.Fecha = FacturaDto.Fecha;
             factura.Cliente = cliente;
             factura.FacturaDetalles = detalles;
             await _db.Factura.AddAsync(factura);

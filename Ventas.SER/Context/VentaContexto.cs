@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 using Ventas.SER.Models;
 
 namespace Ventas.SER.Context
@@ -23,6 +24,26 @@ namespace Ventas.SER.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+           .Entity<Cliente>()
+           .HasMany(e => e.Facturas)
+           .WithOne(e => e.Cliente)
+           .OnDelete(DeleteBehavior.ClientCascade);
+
+            modelBuilder
+             .Entity<Factura>()
+             .HasMany(e => e.FacturaDetalles)
+             .WithOne(f => f.Factura)
+             .OnDelete(DeleteBehavior.ClientCascade);
+
+            modelBuilder
+            .Entity<FacturaDetalle>()
+            .HasOne(f => f.Factura)
+            .WithMany(e => e.FacturaDetalles)
+            .OnDelete(DeleteBehavior.ClientNoAction);
+            
+
         }
     }
 }
