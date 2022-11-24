@@ -37,7 +37,7 @@ namespace Ventas.SER.Controllers
            }
 
             var productos = await _db.Productos.ToListAsync();
-            var productosDtos = _mapper.Map<List<ProductoDto>>(productos) ;
+            var productosDtos = _mapper.Map<List<ProductoDto>>(productos);
 
             productosDtos.ForEach(x => x.CalcularPrecioDolar(tasaCambio.Monto));
            

@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ventas.SER.Context;
+using Ventas.SER.DTOS;
 using Ventas.SER.Models;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,30 +16,32 @@ namespace Ventas.SER.Controllers
     {
 
         private readonly VentaContexto _db;
+        private readonly IMapper _mapper;
 
-        public TasaCambioController(VentaContexto db) { 
+        public TasaCambioController(VentaContexto db, IMapper mapper) { 
             _db = db;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TasaCambio>> Get()
+        public async Task<IActionResult> Get()
         {
-            List<TasaCambio> tasaCambios = new List<TasaCambio>();
+            var tasaCambios = new List<TasaCambio>();
 
             tasaCambios = await _db.TasaCambios.ToListAsync();
-
-            return tasaCambios;
+            var tasaCambioDtos = _mapper.Map<List<TasaCambioDto>>(tasaCambios);
+            return Ok(tasaCambioDtos);
         }
 
        
         [HttpGet("{fecha}")]
-        public async Task<TasaCambio> Get(DateTime fecha)
+        public async Task<IActionResult> Get(DateTime fecha)
         {
-            TasaCambio tasaCambio = new TasaCambio();
+            var tasaCambio = new TasaCambio();
 
-            tasaCambio = await _db.TasaCambios.Where(x => x.Fecha == fecha).FirstOrDefaultAsync();
+            tasaCambio = await _db.TasaCambios.Where(x => x.Fecha.Date == fecha.Date).FirstOrDefaultAsync();
             
-            return tasaCambio;
+            return Ok(tasaCambio);
         }
 
 
@@ -48,54 +53,55 @@ namespace Ventas.SER.Controllers
                 return BadRequest(ModelState.SelectMany(err => err.Value.Errors));
             }
 
-            _db.TasaCambios.AddAsync(tasaCambio);
+            _ = await _db.TasaCambios.AddAsync(tasaCambio);
             _db.SaveChangesAsync();
 
-            return Ok();
+            return Ok(tasaCambio);
         }
 
        
-        [HttpPut("{id}")]
-        public async void Put(int id, TasaCambio tasaCambio)
+        [HttpPut]
+        public async Task<IActionResult> Put(TasaCambio tasaCambio)
         {
-            TasaCambio tasaCambioR = new TasaCambio();
+            var tasaCambioR = new TasaCambio();
 
-            tasaCambioR = await _db.TasaCambios.FindAsync(id);
-
+            tasaCambioR = await _db.TasaCambios.Where(ts => ts.TasaCambioId == tasaCambio.TasaCambioId)
+                                               .AsNoTracking().FirstAsync();
             if(tasaCambioR == null)
             {
-                
+                return BadRequest("No existe ese registro con ese Id");
             }
 
-            tasaCambioR.Fecha = tasaCambio.Fecha;
-            tasaCambioR.Monto = tasaCambio.Monto;
+            tasaCambioR = _mapper.Map<TasaCambio>(tasaCambio);
 
             var result =  _db.TasaCambios.Update(tasaCambioR);
             _db.SaveChangesAsync();
+
+            return Ok(tasaCambioR);
         }
         
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            TasaCambio tasaCambio = new TasaCambio();
+            var tasaCambio = new TasaCambio();
 
             tasaCambio = await _db.TasaCambios.FindAsync(id);
 
-            _db.TasaCambios.Remove(tasaCambio);
+            var result = _db.TasaCambios.Remove(tasaCambio);
             _db.SaveChangesAsync();
 
-            return Ok();
+            return Ok(tasaCambio);
 
         }
 
         [Route("~/api/TasaCambio/Mes/{month}")]
         [HttpGet()]
-        public async Task<IEnumerable<TasaCambio>> Month(int month)
+        public async Task<IActionResult> Month(int month)
         {
-            List<TasaCambio> tasaCambios = new List<TasaCambio>();  
+            var tasaCambios = new List<TasaCambio>();  
             tasaCambios = await _db.TasaCambios.Where(ts => ts.Fecha.Month == month).ToListAsync();
 
-            return tasaCambios;
+            return Ok(tasaCambios);
         }
 
        

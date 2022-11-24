@@ -9,7 +9,9 @@ namespace Ventas.SER.Utils
         public AutoMapperDtos() { 
 
             CreateMap<Producto, ProductoDto>().ReverseMap();
-        
+            CreateMap<TasaCambio, TasaCambioDto>().ReverseMap();
+            CreateMap<FacturaInsertarDto, Factura>().ReverseMap();
+            CreateMap<FacturaDetalle, DetalleFacturaInsertarDto>().ReverseMap();
         }
     }
 }

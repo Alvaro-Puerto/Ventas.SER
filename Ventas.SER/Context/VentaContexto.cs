@@ -11,6 +11,10 @@ namespace Ventas.SER.Context
 
         public virtual DbSet<Producto> Productos { get; set; }
         
+        public virtual DbSet<Factura> Factura { get; set; } 
+
+        public  DbSet<FacturaDetalle> FacturaDetalle { get; set; }
+
         public VentaContexto(DbContextOptions<VentaContexto> opcional) : base(opcional)
         {
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ventas.SER.Context;
 
@@ -11,9 +12,11 @@ using Ventas.SER.Context;
 namespace Ventas.SER.Migrations
 {
     [DbContext(typeof(VentaContexto))]
-    partial class VentaContextoModelSnapshot : ModelSnapshot
+    [Migration("20221124001509_Factura_FacturaDetalleMigracion")]
+    partial class FacturaFacturaDetalleMigracion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,62 +66,6 @@ namespace Ventas.SER.Migrations
                         .IsUnique();
 
                     b.ToTable("Clientes");
-                });
-
-            modelBuilder.Entity("Ventas.SER.Models.Factura", b =>
-                {
-                    b.Property<int>("FacturaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FacturaId"));
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("FacturaId");
-
-                    b.HasIndex("ClienteId");
-
-                    b.ToTable("Factura");
-                });
-
-            modelBuilder.Entity("Ventas.SER.Models.FacturaDetalle", b =>
-                {
-                    b.Property<int>("FacturaDetalleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FacturaDetalleId"));
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("FacturaId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("IVA")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Precio")
-                        .HasColumnType("real");
-
-                    b.Property<int>("ProductoId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Subtotal")
-                        .HasColumnType("real");
-
-                    b.HasKey("FacturaDetalleId");
-
-                    b.HasIndex("FacturaId");
-
-                    b.HasIndex("ProductoId");
-
-                    b.ToTable("FacturaDetalle");
                 });
 
             modelBuilder.Entity("Ventas.SER.Models.Producto", b =>
@@ -175,37 +122,6 @@ namespace Ventas.SER.Migrations
                         .IsUnique();
 
                     b.ToTable("TasaCambios");
-                });
-
-            modelBuilder.Entity("Ventas.SER.Models.Factura", b =>
-                {
-                    b.HasOne("Ventas.SER.Models.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
-                });
-
-            modelBuilder.Entity("Ventas.SER.Models.FacturaDetalle", b =>
-                {
-                    b.HasOne("Ventas.SER.Models.Factura", null)
-                        .WithMany("FacturaDetalles")
-                        .HasForeignKey("FacturaId");
-
-                    b.HasOne("Ventas.SER.Models.Producto", "Producto")
-                        .WithMany()
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Producto");
-                });
-
-            modelBuilder.Entity("Ventas.SER.Models.Factura", b =>
-                {
-                    b.Navigation("FacturaDetalles");
                 });
 #pragma warning restore 612, 618
         }
