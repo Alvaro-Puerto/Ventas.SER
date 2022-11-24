@@ -96,7 +96,7 @@ namespace Ventas.SER.Controllers
 
         }
 
-        [HttpGet("~/buscar/{parametro}")]
+        [HttpGet("~/api/Cliente/Buscar/{parametro}")]
         public async Task<IActionResult> Get(string parametro)
         {
             var clientes = new List<Cliente>();
